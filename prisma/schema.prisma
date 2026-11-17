@@ -1,0 +1,48 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Usuario {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome         String
+  email        String   @unique
+  hashSenha    String   @map("password_hash")
+  papel        String   @default("user")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("usuarios")
+}
+
+model Produto {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome          String
+  descricao     String?
+  precoUnitario Decimal  @db.Decimal(12, 2) @map("preco_unitario") @default(0)
+  estoque       Int      @default(0)
+  estoqueMinimo Int      @default(0) @map("estoque_minimo")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("produtos")
+}
+
+model Cliente {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome      String
+  apelido   String?
+  email     String?  @unique
+  telefone  String
+  endereco  String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("clientes")
+}
